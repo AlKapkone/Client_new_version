@@ -34,10 +34,10 @@ public class StartClient {
         }
     }
     
-    public void exsecuteUser(User user, String comand){
+    public void executeUser(User user, String command){
         String sendMessage = getJson(user);
 
-        if (setConect(comand)) {
+        if (setConect(command)) {
             System.out.println(sendMessage);
             write(sendMessage);
             System.out.println(response.nextLine());
@@ -62,7 +62,7 @@ public class StartClient {
     private boolean setConect(String command){
         request.write(command + "\n");
         request.flush();
-        return response.nextLine().equals("ok");
+        return response.nextLine().equals("Ok");
     }
 
     private String getJson(User user) {

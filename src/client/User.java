@@ -1,7 +1,5 @@
 package client;
-
 public class User {
-
     private String name, email;
     private int id;
 

@@ -19,7 +19,7 @@ public class Gui extends JFrame {
         dtm.addColumn("ID");
         dtm.addColumn("Ім'я");
         dtm.addColumn("Email");
-//        getUsers();
+        getUsers();
     }
 
     @SuppressWarnings("unchecked")
@@ -147,19 +147,15 @@ public class Gui extends JFrame {
     private String COMMAND_ADD_USER = "Add";
     private String COMMAND_DELETE_USER = "Del";
     private String COMMAND_UPDATE_USER = "Upd";
-//    private String COMAND_ADD_USER = "Add"; 
      
-    
+    private static int count = 1;
 
     //------ADD user operation
     public void jButton1ActionPerformed(java.awt.event.ActionEvent evt) throws IOException {
-        JTextField zField = new JTextField(2);
         JTextField xField = new JTextField(15);
         JTextField yField = new JTextField(15);
 
         JPanel myPanel = new JPanel();
-        myPanel.add(new JLabel("ID:"));
-        myPanel.add(zField);
         myPanel.add(new JLabel("Name:"));
         myPanel.add(xField);
         myPanel.add(new JLabel("Email:"));
@@ -169,18 +165,17 @@ public class Gui extends JFrame {
                 "Please Enter New User's information", JOptionPane.OK_CANCEL_OPTION);
         if (result == JOptionPane.OK_OPTION) {
             User user = new User(
-                    Integer.parseInt(zField.getText()),
+                    count++,
                     xField.getText(),
                     yField.getText()
             );
-            System.out.println("ID is: " + user.getId());
             System.out.println("The name is: " + user.getName());
             System.out.println("The email is: " + user.getEmail());
-            startClient.exsecuteUser(user, COMMAND_ADD_USER);
+            startClient.executeUser(user, COMMAND_ADD_USER);
         }
 
         Object row[] = new Object[3];
-        row[0] = zField.getText();
+        row[0] = count;
         row[1] = xField.getText();
         row[2] = yField.getText();
         dtm.addRow(row);
@@ -201,8 +196,7 @@ public class Gui extends JFrame {
             );
 
 
-            startClient.exsecuteUser(user, COMMAND_DELETE_USER);
-            getUsers();
+            startClient.executeUser(user, COMMAND_DELETE_USER);
             dtm.removeRow(t[0]);
         }
     }
@@ -219,14 +213,15 @@ public class Gui extends JFrame {
                         (String) dtm.getValueAt(t[0],1),
                         (String) dtm.getValueAt(t[0],2)
                 );
-                startClient.exsecuteUser(user, COMMAND_UPDATE_USER);
+                startClient.executeUser(user, COMMAND_UPDATE_USER);
         }
     }
 
     //------GET user operation
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {
-        for(int i = dtm.getRowCount() - 1; i > 0; i--){
-            dtm.removeRow(i);
+        int size = dtm.getRowCount();
+        for(int i =  1; i <= size; i++){
+            dtm.removeRow(size - i);
         }
         getUsers();
     }
@@ -237,10 +232,7 @@ public class Gui extends JFrame {
         java.lang.reflect.Type type = new TypeToken<List<User>>() {
         }.getType();
         List<User> usersList = gson.fromJson(allUsers, type);
-        
-//        if(usersList == null){
-//            return;
-//        }
+//        size = userList.size();
         
         for(User us : usersList){
             Object row[] = new Object[3];
@@ -251,8 +243,7 @@ public class Gui extends JFrame {
             dtm.addRow(row);
         }
     }
-    
-    
+
     // Variables declaration
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
