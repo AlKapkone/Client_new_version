@@ -2,9 +2,7 @@ package client;
 
 import java.awt.*;
 
-public class Client {
-
-    
+public class Client {    
 
     public static void main(String args[]) {
 

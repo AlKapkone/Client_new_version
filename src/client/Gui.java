@@ -4,11 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
-import java.util.Vector;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -23,11 +19,10 @@ public class Gui extends JFrame {
         dtm.addColumn("ID");
         dtm.addColumn("Ім'я");
         dtm.addColumn("Email");
-        getUsers();
+//        getUsers();
     }
 
     @SuppressWarnings("unchecked")
-
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -80,6 +75,15 @@ public class Gui extends JFrame {
 
         jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 20)); // NOI18N
         jLabel1.setText("User's List");
+        
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -127,6 +131,10 @@ public class Gui extends JFrame {
         pack();
     }
 
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {                                   
+        startClient.exit();              
+    }
+    
     private static final String HOST = "127.0.0.1";
     private static final int PORT = 55555;
     private static StartClient startClient;
@@ -135,6 +143,13 @@ public class Gui extends JFrame {
         startClient = new StartClient(HOST, PORT);
         startClient.start();
     }
+    
+    private String COMMAND_ADD_USER = "Add";
+    private String COMMAND_DELETE_USER = "Del";
+    private String COMMAND_UPDATE_USER = "Upd";
+//    private String COMAND_ADD_USER = "Add"; 
+     
+    
 
     //------ADD user operation
     public void jButton1ActionPerformed(java.awt.event.ActionEvent evt) throws IOException {
@@ -161,7 +176,7 @@ public class Gui extends JFrame {
             System.out.println("ID is: " + user.getId());
             System.out.println("The name is: " + user.getName());
             System.out.println("The email is: " + user.getEmail());
-            startClient.addUser(user);
+            startClient.exsecuteUser(user, COMMAND_ADD_USER);
         }
 
         Object row[] = new Object[3];
@@ -173,16 +188,12 @@ public class Gui extends JFrame {
 
     //------DELETE user operation
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
         int t[] = jTable1.getSelectedRows();
         if (t.length > 1) {
             JOptionPane.showMessageDialog(null, "Please select only one row");
         } else if (t.length == 0) {
             JOptionPane.showMessageDialog(null, "Please select a row");
         } else {
-
-//            String row = (String) dtm.getValueAt(t[0],1);
-
             User user = new User(
                     Integer.parseInt((String) dtm.getValueAt(t[0],0)),
                     (String) dtm.getValueAt(t[0],1),
@@ -190,7 +201,7 @@ public class Gui extends JFrame {
             );
 
 
-            startClient.deleteUser(user);
+            startClient.exsecuteUser(user, COMMAND_DELETE_USER);
             getUsers();
             dtm.removeRow(t[0]);
         }
@@ -203,15 +214,12 @@ public class Gui extends JFrame {
         if (t.length == 0) {
             JOptionPane.showMessageDialog(null, "Please select a row");
         } else {
-//            for (int i = t.length - 1; i >= 0; i--) {
-
                 User user = new User(
                         Integer.parseInt((String) dtm.getValueAt(t[0],0)),
                         (String) dtm.getValueAt(t[0],1),
                         (String) dtm.getValueAt(t[0],2)
                 );
-                startClient.updateUser(user);
-//            }
+                startClient.exsecuteUser(user, COMMAND_UPDATE_USER);
         }
     }
 
@@ -229,7 +237,11 @@ public class Gui extends JFrame {
         java.lang.reflect.Type type = new TypeToken<List<User>>() {
         }.getType();
         List<User> usersList = gson.fromJson(allUsers, type);
-
+        
+//        if(usersList == null){
+//            return;
+//        }
+        
         for(User us : usersList){
             Object row[] = new Object[3];
             row[0] =String.valueOf(us.getId());

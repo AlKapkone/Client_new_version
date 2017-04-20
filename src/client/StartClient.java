@@ -18,51 +18,28 @@ public class StartClient {
         this.port = port;
     }
 
-    private Socket sock;
+    private Socket socket;
     private Scanner response;
     private PrintWriter request;
 
     public void start() {
         try {
-            sock = new Socket(host, port);
+            socket = new Socket(host, port);
             System.out.println("Connected to " + host + " on port " + port);
-            response = new Scanner(sock.getInputStream());
-            request = new PrintWriter(sock.getOutputStream());
-
+            response = new Scanner(socket.getInputStream());
+            request = new PrintWriter(socket.getOutputStream());
 
         } catch (IOException e) {
             System.out.println(e.toString());
         }
     }
-
-    public void addUser(User user) throws IOException {
-
-        String json = getJson(user);
-
-        if (setConect("Add")) {
-            System.out.println(json);
-            write(json);
-            System.out.println(response.nextLine());
-        }
-    }
     
-    public void deleteUser(User user) {
-        String json = getJson(user);
+    public void exsecuteUser(User user, String comand){
+        String sendMessage = getJson(user);
 
-        if (setConect("Del")) {
-            System.out.println(json);
-            write(json);
-            System.out.println(response.nextLine());
-        }
-    }
-
-    public void updateUser(User user) {
-
-        String json = getJson(user);
-
-        if (setConect("Upd")) {
-            System.out.println(json);
-            write(json);
+        if (setConect(comand)) {
+            System.out.println(sendMessage);
+            write(sendMessage);
             System.out.println(response.nextLine());
         }
     }
@@ -74,6 +51,12 @@ public class StartClient {
             allUsers = response.nextLine();
         }
         return allUsers;
+    }
+    
+    public void exit(){
+        if(setConect("Exi")){
+            System.out.println("Exit successfuly");
+        }
     }
     
     private boolean setConect(String command){
