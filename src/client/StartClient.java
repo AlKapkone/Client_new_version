@@ -23,6 +23,7 @@ public class StartClient {
     private PrintWriter request;
 
     public void start() {
+
         try {
             socket = new Socket(host, port);
             System.out.println("Connected to " + host + " on port " + port);
@@ -53,10 +54,12 @@ public class StartClient {
         return allUsers;
     }
     
-    public void exit(){
+    public void exit() throws IOException {
+
         if(setConect("Exi")){
             System.out.println("Exit successfuly");
         }
+        socket.close();
     }
     
     private boolean setConect(String command){

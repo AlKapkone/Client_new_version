@@ -81,7 +81,11 @@ public class Gui extends JFrame {
             
             @Override
             public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
+                try {
+                    formWindowClosing(evt);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -131,7 +135,7 @@ public class Gui extends JFrame {
         pack();
     }
 
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {                                   
+    private void formWindowClosing(java.awt.event.WindowEvent evt) throws IOException {
         startClient.exit();              
     }
     
@@ -217,7 +221,7 @@ public class Gui extends JFrame {
         }
     }
 
-    //------GET user operation
+    //------GET user operation--------------------------------------------
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {
         int size = dtm.getRowCount();
         for(int i =  1; i <= size; i++){
@@ -225,7 +229,7 @@ public class Gui extends JFrame {
         }
         getUsers();
     }
-
+//-----------------------------------------------------------------------------------
     private static void getUsers(){
         String allUsers = startClient.getAllUser();
         Gson gson = new Gson();
@@ -243,7 +247,7 @@ public class Gui extends JFrame {
             dtm.addRow(row);
         }
     }
-
+//-----------------------------------------------------------------------------------
     // Variables declaration
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
